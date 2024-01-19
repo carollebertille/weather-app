@@ -13,7 +13,7 @@ pipeline {
     }
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: '')
-         string (name: 'APP_NAME', defaultValue: 'weather', description: '')
+        string (name: 'APP_NAME', defaultValue: 'weather', description: '')
     }
     stages {
         stage ('Checkout') {
@@ -52,7 +52,7 @@ pipeline {
         stage('SonarQube analysis') {
             steps {
                 script {
-                    def sourceCodeDir = "${WORKSPACE}/code/application/${params.APP_NAME}"
+                    def sourceCodeDir = "${WORKSPACE}/weather-code/application/${params.APP_NAME}"
                     dir(sourceCodeDir) {
                         docker.image('sonarsource/sonar-scanner-cli:5').inside {
                             withSonarQubeEnv('sonar-scanner') {
