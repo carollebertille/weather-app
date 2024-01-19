@@ -55,7 +55,7 @@ pipeline {
                             sonar.projectKey=weather-code
                             sonar.projectName=weather-code
                             sonar.projectVersion=1.0
-                            sonar.sources=code-dockerfile
+                            sonar.sources=.
                             qualitygate.wait=true
                         """
 
