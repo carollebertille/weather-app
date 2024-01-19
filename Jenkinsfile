@@ -62,7 +62,7 @@ pipeline {
                             cd ../../code-dockerfile/weather
                             docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/weather:${WEATHER_IMAGE_VERSION} . 
                             cd ../../code-dockerfile/DB
-                            docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/db:${DB_IMAGE_VERSIO} . 
+                            docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/db:${DB_IMAGE_VERSION} . 
                             '''
                     }
                 }
