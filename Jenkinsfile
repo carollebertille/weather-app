@@ -32,7 +32,7 @@ pipeline {
                 }
             }
         }
-        stage('SonarQube analysis') {
+        /*stage('SonarQube analysis') {
             agent {
                 docker {
                  image 'sonarsource/sonar-scanner-cli:4.8'
@@ -47,7 +47,22 @@ pipeline {
                  sh "${scannerHome}/bin/sonar-scanner"
                 }
               }
+            }*/
+        stage('SonarQube analysis') {
+            steps {
+                script {
+                    def sourceCodeDir = "${WORKSPACE}/code/application/${params.APP_NAME}"
+                    dir(sourceCodeDir) {
+                        docker.image('sonarsource/sonar-scanner-cli:5').inside {
+                            withSonarQubeEnv('sonar-scanner') {
+                                sh "ls"
+                                sh "/opt/sonar-scanner/bin/sonar-scanner"
+                            }
+                        }
+                    }
+                }
             }
+        }
         stage('Building image') {
             steps{
                 script {
