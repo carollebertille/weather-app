@@ -52,8 +52,8 @@ pipeline {
                         // Define the content of sonar-project.properties
                         def sonarProjectPropertiesContent = """
                             sonar.host.url=https://sonarqube.ektechsoftwaresolution.com/
-                            sonar.projectKey=weather-code
-                            sonar.projectName=weather-code
+                            sonar.projectKey=weather-sonar
+                            sonar.projectName=weather-sonar
                             sonar.projectVersion=1.0
                             sonar.sources=.
                             qualitygate.wait=true
