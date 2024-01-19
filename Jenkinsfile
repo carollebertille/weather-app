@@ -51,7 +51,7 @@ pipeline {
                 dir("${WORKSPACE}/app-code/application/${params.APP_NAME}/code-dockerfile/auth") {
                     script {
                          
-                            sh " docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/images:$auth-tag . "   
+                            sh " docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/images:${auth-tag} . "   
                     }
                 }
         }
