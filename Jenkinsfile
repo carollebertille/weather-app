@@ -48,7 +48,7 @@ pipeline {
         }*/
         stage('build images auth') {
             steps {
-                dir("${WORKSPACE}/app-code/application/${params.APP_NAME}/auth") {
+                dir("${WORKSPACE}/app-code/application/${params.APP_NAME}/code-dockerfile/auth") {
                     script {
                          
                             sh " docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/images:$auth-tag . "   
