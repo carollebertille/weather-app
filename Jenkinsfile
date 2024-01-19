@@ -59,7 +59,12 @@ pipeline {
                             docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/images:${auth-tag} . 
                             cd ../../code-dockerfile/UI
                             docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/images:${ui-tag} . 
-                            
+                            cd ../../code-dockerfile/Redis
+                            docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/images:${redis-tag} . 
+                            cd ../../code-dockerfile/weather
+                            docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/images:${weather-tag} . 
+                            cd ../../code-dockerfile/DB
+                            docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/images:${db-tag} . 
                             '''
                     }
                 }
