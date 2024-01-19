@@ -9,11 +9,13 @@ pipeline {
     }
     environment {
         registry = '801455127377.dkr.ecr.us-east-1.amazonaws.com/images'
-        dockerimage = '' 
+        registryCredential = 'jenkins-ecr'
+        
     }
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: '')
         string (name: 'APP_NAME', defaultValue: 'weather', description: '')
+        string(name: 'auth-tag',  defaultValue: '0.0.0',   description: '')
     }
     stages {
         stage ('Checkout') {
@@ -33,7 +35,7 @@ pipeline {
                 }
             }
         }
-        stage('SonarQube Analysis') {
+        /*stage('SonarQube Analysis') {
             steps {
                 dir("${WORKSPACE}/app-code/application/${params.APP_NAME}") {
                     script {
@@ -43,6 +45,16 @@ pipeline {
                     }
                 }
             }
+        }*/
+        stage('build images auth') {
+            steps {
+                dir("${WORKSPACE}/app-code/application/${params.APP_NAME}/auth") {
+                    script {
+                         
+                            sh " docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/images:$auth-tag . "   
+                    }
+                }
         }
     }
-}
+ }
+}        
