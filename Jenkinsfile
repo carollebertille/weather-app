@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        label 'main'
-    }
+    agent any
     options {
         buildDiscarder(logRotator(numToKeepStr: '7'))
         skipDefaultCheckout(true)
