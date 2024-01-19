@@ -35,7 +35,7 @@ pipeline {
         }
         stage('Remove Existing sonar-project.properties') {
             steps {
-                dir("${WORKSPACE}/code/application/${params.APP_NAME}") {
+                dir("${WORKSPACE}/weather-code/application/${params.APP_NAME}") {
                     script {
                         // Check if sonar-project.properties exists and remove it if found
                         if (fileExists('sonar-project.properties')) {
