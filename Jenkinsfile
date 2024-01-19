@@ -1,7 +1,7 @@
 pipeline {
     agent any
     options {
-        buildDiscarder(logRotator(numToKeepStr: '7'))
+        buildDiscarder(logRotator(numToKeepStr: '2'))
         skipDefaultCheckout(true)
         disableConcurrentBuilds()
         timeout (time: 1, unit: 'MINUTES')
@@ -18,7 +18,7 @@ pipeline {
     stages {
         stage ('Checkout') {
             steps {
-                dir("${WORKSPACE}/weather-code/application/${params.APP_NAME}") {
+                dir("${WORKSPACE}/app-code/application/${params.APP_NAME}") {
                     checkout([
                         $class: 'GitSCM',
                         branches: [[name: "*/${env.BRANCH_NAME}"]],
@@ -35,7 +35,7 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             steps {
-                dir("${WORKSPACE}/weather-code/application/${params.APP_NAME}") {
+                dir("${WORKSPACE}/app-code/application/${params.APP_NAME}") {
                     script {
                         withSonarQubeEnv('sonar-scanner') {
                             sh "/var/opt/sonar-scanner/bin/sonar-scanner"
