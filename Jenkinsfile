@@ -79,7 +79,7 @@ pipeline {
             steps {
                 dir("${WORKSPACE}/weather-code/application/${params.APP_NAME}") {
                     script {
-                        withSonarQubeEnv('Sonar-scanner') {
+                        withSonarQubeEnv('sonar-scanner') {
                             sh "/var/opt/sonar-scanner/bin/sonar-scanner"
                         }
                     }
