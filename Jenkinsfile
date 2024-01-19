@@ -8,18 +8,16 @@ pipeline {
         timestamps()
     }
     environment {
-        registry = '801455127377.dkr.ecr.us-east-1.amazonaws.com/images'
         registryCredential = 'jenkins-ecr'
         
     }
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: '')
-        string (name: 'APP_NAME', defaultValue: 'weather', description: '')
-        string(name: 'auth-tag',  defaultValue: '0.0.0',   description: '')
-        string(name: 'ui-tag',  defaultValue: '0.0.0',   description: '')
-        string(name: 'redis-tag',  defaultValue: '0.0.0',   description: '')
-        string(name: 'weather-tag',  defaultValue: '0.0.0',   description: '')
-        string(name: 'db-tag',  defaultValue: '0.0.0',   description: '')
+        string(name: 'DB_IMAGE_VERSION', defaultValue: '0.0.0', description: '')
+        string(name: 'REDIS_IMAGE_VERSION', defaultValue: '0.0.0', description: '')
+        string(name: 'UI_IMAGE_VERSION', defaultValue: '0.0.0', description: '')
+        string(name: 'WEATHER_IMAGE_VERSION', defaultValue: '0.0.0', description: '')
+        string(name: 'AUTH_IMAGE_VERSION', defaultValue: '0.0.0', description: '')
     }
     stages {
         stage ('Checkout') {
@@ -56,19 +54,29 @@ pipeline {
                     script {
                          sh '''
                             cd code-dockerfile/auth
-                            docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/images:${auth-tag} . 
+                            docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/auth:${AUTH_IMAGE_VERSION} . 
                             cd ../../code-dockerfile/UI
-                            docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/images:${ui-tag} . 
+                            docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/ui:${UI_IMAGE_VERSION} . 
                             cd ../../code-dockerfile/Redis
-                            docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/images:${redis-tag} . 
+                            docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/redis:${REDIS_IMAGE_VERSION} . 
                             cd ../../code-dockerfile/weather
-                            docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/images:${weather-tag} . 
+                            docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/weather:${WEATHER_IMAGE_VERSION} . 
                             cd ../../code-dockerfile/DB
-                            docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/images:${db-tag} . 
+                            docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/db:${DB_IMAGE_VERSIO} . 
                             '''
                     }
                 }
         }
     }
+   stage('SonarQube Analysis') {
+            steps {
+                dir("${WORKSPACE}/app-code/application/${params.APP_NAME}") {
+                    script {
+                        withSonarQubeEnv('sonar-scanner') {
+                            sh "/var/opt/sonar-scanner/bin/sonar-scanner"
+                        }
+                    }
+                }
+            }
  }
 }        
