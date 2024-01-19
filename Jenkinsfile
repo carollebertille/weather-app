@@ -45,10 +45,27 @@ pipeline {
                   scannerHome='/opt/sonar-scanner'
             }
              steps{
-               withSonarQubeEnv('Sonarqube') {
+               withSonarQubeEnv('sonar-scanner') {
                  sh "${scannerHome}/bin/sonar-scanner"
                 }
               }
             }
+        stage('Building image') {
+            steps{
+                script {
+                    dockerImage = docker.build registry
+                }
+            }
+        }
+        stage('Pushing to ECR') {
+            steps {
+                script {
+                    // Authenticate with AWS ECR
+                    docker.withRegistry("https://"+registry,"ecr:us-east-1:"+registryCredential) { 
+                      dockerImage.push()
+                  }
+            }
+          }
+        }
     }
 }
