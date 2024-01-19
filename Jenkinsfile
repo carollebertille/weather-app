@@ -1,0 +1,54 @@
+pipeline {
+    agent {
+        label 'main'
+    }
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '7'))
+        skipDefaultCheckout(true)
+        disableConcurrentBuilds()
+        timeout (time: 1, unit: 'MINUTES')
+        timestamps()
+    }
+    environment {
+        registry = '801455127377.dkr.ecr.us-east-1.amazonaws.com/images'
+        dockerimage = '' 
+    }
+    parameters {
+        string(name: 'BRANCH_NAME', defaultValue: 'main', description: '')
+    }
+    stages {
+        stage ('Checkout') {
+            steps {
+                dir("${WORKSPACE}/weather-code") {
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: "*/${env.BRANCH_NAME}"]],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [[$class: 'LocalBranch']],
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[
+                            url: 'git@github.com:carollebertille/weather-app.git',
+                            credentialsId: 'github-auth'
+                        ]]
+                    ])
+                }
+            }
+        }
+        stage('SonarQube analysis') {
+            agent {
+                docker {
+                 image 'sonarsource/sonar-scanner-cli:4.8'
+                }
+            }
+               environment {
+                 CI = 'true'
+                  scannerHome='/opt/sonar-scanner'
+            }
+             steps{
+               withSonarQubeEnv('Sonarqube') {
+                 sh "${scannerHome}/bin/sonar-scanner"
+                }
+              }
+            }
+    }
+}
