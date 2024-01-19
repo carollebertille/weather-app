@@ -13,6 +13,7 @@ pipeline {
     }
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: '')
+         string (name: 'APP_NAME', defaultValue: 'weather', description: '')
     }
     stages {
         stage ('Checkout') {
