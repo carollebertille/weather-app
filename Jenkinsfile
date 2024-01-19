@@ -33,7 +33,7 @@ pipeline {
                 }
             }
         }
-        stage('Remove Existing sonar-project.properties') {
+        /*stage('Remove Existing sonar-project.properties') {
             steps {
                 dir("${WORKSPACE}/weather-code/application/${params.APP_NAME}") {
                     script {
@@ -64,7 +64,7 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
         stage('Open sonar-project.properties') {
             steps {
                 dir("${WORKSPACE}/weather-code/application/${params.APP_NAME}") {
