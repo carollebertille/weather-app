@@ -68,15 +68,7 @@ pipeline {
                 }
         }
     }
-   stage('SonarQube Analysis') {
-            steps {
-                dir("${WORKSPACE}/app-code/application/${params.APP_NAME}") {
-                    script {
-                        withSonarQubeEnv('sonar-scanner') {
-                            sh "/var/opt/sonar-scanner/bin/sonar-scanner"
-                        }
-                    }
-                }
-            }
+   
+            
  }
 }        
