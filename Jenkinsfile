@@ -50,7 +50,7 @@ pipeline {
                 }
             }
         }*/
-        stage('build images auth') {
+        stage('build images') {
             steps {
                 dir("${WORKSPACE}/app-code/application/${params.APP_NAME}") {
                     script {
