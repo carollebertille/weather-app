@@ -9,9 +9,14 @@ pipeline {
     }
     environment {
         registryCredential = 'jenkins-ecr'
-        
+        REGISTRY = "801455127377.dkr.ecr.us-east-1.amazonaws.com"
+        REGION = "us-east-1"
     }
     parameters {
+        choice(
+            choices: ['dockerhub', 'ecr'], 
+            name: 'Registry'
+          )
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: '')
         string(name: 'DB_IMAGE_VERSION', defaultValue: '0.0.0', description: '')
         string(name: 'REDIS_IMAGE_VERSION', defaultValue: '0.0.0', description: '')
@@ -49,6 +54,10 @@ pipeline {
             }
         }*/
         stage('build images') {
+            when{  
+            expression {
+              params.Registry == 'ecr' }
+              }
             steps {
                 dir("${WORKSPACE}/app-code/application/${params.APP_NAME}") {
                     script {
@@ -66,6 +75,24 @@ pipeline {
                             '''
                     }
                 }
+        }
+    }
+    stage('Login ecr') {
+            when{  
+            expression {
+              params.Registry == 'ecr' }
+              }
+            steps {
+                    script {
+                         sh '''
+                            aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $REGISTRY/ui
+                            aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $REGISTRY/auth
+                            aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $REGISTRY/weather
+                            aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $REGISTRY/db
+                            aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $REGISTRY/redis
+                            '''
+                    }
+                
         }
     }
    
