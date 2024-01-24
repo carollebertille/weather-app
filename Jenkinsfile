@@ -59,7 +59,7 @@ pipeline {
                 }
             }
         }*/
-        stage('build auth image') {
+        stage('build all images (auth, ui, redis, weather, db)') {
             when{  
             expression {
               params.Registry == 'ecr' }
@@ -74,7 +74,10 @@ pipeline {
                             docker build -t ${ECR_REGISTRY_URI}/${UI_ECR_REPOSITORY_NAME}:${params.UI_IMAGE_VERSION} .
                             cd ../../code-dockerfile/DB
                             docker build -t ${ECR_REGISTRY_URI}/${DB_ECR_REPOSITORY_NAME}:${params.DB_IMAGE_VERSION} .
-                            
+                            cd ../../code-dockerfile/Redis
+                            docker build -t ${ECR_REGISTRY_URI}/${REDIS_ECR_REPOSITORY_NAME}:${params.REDIS_IMAGE_VERSION} .
+                            cd ../../code-dockerfile/weather
+                            docker build -t ${ECR_REGISTRY_URI}/${WEATHER_ECR_REPOSITORY_NAME}:${params.WEATHER_IMAGE_VERSION} .
                             """
                     }
                 }
