@@ -11,7 +11,7 @@ pipeline {
         registryCredential = 'jenkins-ecr'
         DOCKERHUB_REGISTRY = "edennolsn2021"
         ECR_REGISTRY_URI = "801455127377.dkr.ecr.us-east-1.amazonaws.com"
-        UI_ECR_IMAGE_REPOSITORY_NAME = "weather-ui"
+        UI_ECR_REPOSITORY_NAME = "weather-ui"
         AUTH_ECR_REPOSITORY_NAME = "weather-auth"
         WEATHER_ECR_REPOSITORY_NAME = "weather-weather"
         REDIS_ECR_REPOSITORY_NAME = "weather-redis"
