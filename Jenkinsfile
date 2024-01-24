@@ -71,8 +71,7 @@ pipeline {
                          sh '''
                             cd code-dockerfile/auth
                             docker build -t ${ECR_REGISTRY_URI}/${AUTH_ECR_REPOSITORY_NAME}:${params.AUTH_IMAGE_VERSION} .
-                            cd ../../code-dockerfile/UI
-                            docker build -t ${ECR_REGISTRY_URI}/${UI_ECR_REPOSITORY_NAME}:${params.UI_IMAGE_VERSION} .
+                            
                             '''
                     }
                 }
