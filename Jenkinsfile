@@ -10,12 +10,7 @@ pipeline {
     environment {
         registryCredential = 'jenkins-ecr'
         REGISTRY = "801455127377.dkr.ecr.us-east-1.amazonaws.com"
-        REGION = "us-east-1"
-        UI_ECR_IMAGE_REPOSITORY_NAME = "weather-ui"
-        AUTH_ECR_REPOSITORY_NAME = "weather-auth"
-        WEATHER_ECR_REPOSITORY_NAME = "weather-weather"
-        REDIS_ECR_REPOSITORY_NAME = "weather-redis"
-        DB_ECR_REPOSITORY_NAME = "weather-db"
+        DOCKERHUB_REGISTRY = "edennolsn2021"
     }
     parameters {
         choice(
@@ -146,6 +141,20 @@ pipeline {
             steps {
                     script {
                          sh '''
+                            aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $REGISTRY
+                            
+                            '''
+                    }
+          }
+      } 
+      stage('Push all images  to ecr') {
+            when{  
+            expression {
+              params.Registry == 'ecr' }
+              }
+            steps {
+                    script {
+                         sh '''
                             aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $REGISTRY/ui
                             aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $REGISTRY/auth
                             aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $REGISTRY/weather
@@ -153,10 +162,43 @@ pipeline {
                             aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $REGISTRY/redis
                             '''
                     }
-                
-        }
-    }
+          }
+      } 
    
             
  }
+ post {
+         success {
+             slackSend color: '#2EB67D',
+             channel: '#develop', 
+             message: "*Alpha Project Build Status*" +
+             "\n Project Name: Weather" +
+             "\n Job Name: ${env.JOB_NAME}" +
+             "\n Build number: ${currentBuild.displayName}" +
+             "\n Build Status : *SUCCESS*" +
+             "\n Build url : ${env.BUILD_URL}"
+         }
+         failure {
+             slackSend color: '#E01E5A',
+             channel: '#develop',  
+             message: "*Weather Project Build Status*" +
+             "\n Project Name: Weather" +
+             "\n Job Name: ${env.JOB_NAME}" +
+             "\n Build number: ${currentBuild.displayName}" +
+             "\n Build Status : *FAILED*" +
+             "\n Action : Please check the console output to fix this job IMMEDIATELY" +
+             "\n Build url : ${env.BUILD_URL}"
+         }
+         unstable {
+             slackSend color: '#ECB22E',
+             channel: '#develop', 
+             message: "*Weather Project Build Status*" +
+             "\n Project Name: Weather" +
+             "\n Job Name: ${env.JOB_NAME}" +
+             "\n Build number: ${currentBuild.displayName}" +
+             "\n Build Status : *UNSTABLE*" +
+             "\n Action : Please check the console output to fix this job IMMEDIATELY" +
+             "\n Build url : ${env.BUILD_URL}"
+         }   
+     }
 }        
