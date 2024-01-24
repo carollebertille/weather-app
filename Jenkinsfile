@@ -9,8 +9,14 @@ pipeline {
     }
     environment {
         registryCredential = 'jenkins-ecr'
-        REGISTRY = "801455127377.dkr.ecr.us-east-1.amazonaws.com"
         DOCKERHUB_REGISTRY = "edennolsn2021"
+        ECR_REGISTRY_URI = "801455127377.dkr.ecr.us-east-1.amazonaws.com"
+        UI_ECR_IMAGE_REPOSITORY_NAME = "weather-ui"
+        AUTH_ECR_REPOSITORY_NAME = "weather-auth"
+        WEATHER_ECR_REPOSITORY_NAME = "weather-weather"
+        REDIS_ECR_REPOSITORY_NAME = "weather-redis"
+        DB_ECR_REPOSITORY_NAME = "weather-db"
+        dockerimage = '' 
     }
     parameters {
         choice(
@@ -63,7 +69,8 @@ pipeline {
                     script {
                          sh '''
                             cd code-dockerfile/auth
-                            docker build -t $REGISTRY/weather-auth:${params.AUTH_IMAGE_VERSION} . 
+                            dockerImage = docker.build("${ECR_REGISTRY_URI}/${AUTH_ECR_REPOSITORY_NAME}:${params.AUTH_IMAGE_VERSION}")
+                           // docker build -t $REGISTRY/weather-auth:${params.AUTH_IMAGE_VERSION} . 
                             '''
                     }
                 }
@@ -79,7 +86,8 @@ pipeline {
                     script {
                          sh '''
                             cd code-dockerfile/UI
-                            docker build -t $REGISTRY/weather-ui:${params.UI_IMAGE_VERSION} . 
+                            dockerImage = docker.build("${ECR_REGISTRY_URI}/${UI_ECR_REPOSITORY_NAME}:${params.UI_IMAGE_VERSION}")
+                          //  docker build -t $REGISTRY/weather-ui:${params.UI_IMAGE_VERSION} . 
                             '''
                     }
                 }
@@ -95,7 +103,8 @@ pipeline {
                     script {
                          sh '''
                             cd code-dockerfile/DB
-                            docker build -t $REGISTRY/weather-db:${params.DB_IMAGE_VERSION} . 
+                            dockerImage = docker.build("${ECR_REGISTRY_URI}/${DB_ECR_REPOSITORY_NAME}:${params.DB_IMAGE_VERSION}")
+                          //  docker build -t $REGISTRY/weather-db:${params.DB_IMAGE_VERSION} . 
                             '''
                     }
                 }
@@ -111,7 +120,8 @@ pipeline {
                     script {
                          sh '''
                             cd code-dockerfile/redis
-                            docker build -t $REGISTRY/weather-redis:${params.REDIS_IMAGE_VERSION} . 
+                            dockerImage = docker.build("${ECR_REGISTRY_URI}/${REDIS_ECR_REPOSITORY_NAME}:${params.REDIS_IMAGE_VERSION}")
+                          //  docker build -t $REGISTRY/weather-redis:${params.REDIS_IMAGE_VERSION} . 
                             '''
                     }
                 }
@@ -127,12 +137,14 @@ pipeline {
                     script {
                          sh '''
                             cd code-dockerfile/weather
-                            docker build -t $REGISTRY/weather-weather:${params.WEATHER_IMAGE_VERSION} . 
+                            dockerImage = docker.build("${ECR_REGISTRY_URI}/${WEATHER_ECR_REPOSITORY_NAME}:${params.WEATHER_IMAGE_VERSION}")
+                          //  docker build -t $REGISTRY/weather-weather:${params.WEATHER_IMAGE_VERSION} . 
                             '''
                     }
                 }
         }
     }
+    
     stage('Login ecr') {
             when{  
             expression {
