@@ -83,7 +83,7 @@ pipeline {
                 }
         }
     }
-    stage('build ui image') {
+    /*stage('build ui image') {
             when{  
             expression {
               params.Registry == 'ecr' }
@@ -147,7 +147,7 @@ pipeline {
                     }
                 }
         }
-    }
+    }*/
     
    /* stage('Login ecr') {
             when{  
