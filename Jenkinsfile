@@ -85,7 +85,7 @@ pipeline {
                 dir("${WORKSPACE}/app-code/application/${params.APP_NAME}") {
                     script {
                          sh """
-                            cd code-dockerfile/UI
+                            cd ${WORKSPACE}/app-code/application/${params.APP_NAME}/code-dockerfile/UI
                             docker build -t ${ECR_REGISTRY_URI}/${UI_ECR_REPOSITORY_NAME}:${params.UI_IMAGE_VERSION} .
                             
                             """
