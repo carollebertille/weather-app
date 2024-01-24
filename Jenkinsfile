@@ -11,6 +11,11 @@ pipeline {
         registryCredential = 'jenkins-ecr'
         REGISTRY = "801455127377.dkr.ecr.us-east-1.amazonaws.com"
         REGION = "us-east-1"
+        UI_ECR_IMAGE_REPOSITORY_NAME = "ui"
+        AUTH_ECR_REPOSITORY_NAME = "auth"
+        WEATHER_ECR_REPOSITORY_NAME = "weather"
+        REDIS_ECR_REPOSITORY_NAME = "redis"
+        DB_ECR_REPOSITORY_NAME = "db"
     }
     parameters {
         choice(
@@ -53,7 +58,7 @@ pipeline {
                 }
             }
         }*/
-        stage('build images') {
+        stage('build auth image') {
             when{  
             expression {
               params.Registry == 'ecr' }
@@ -63,15 +68,71 @@ pipeline {
                     script {
                          sh '''
                             cd code-dockerfile/auth
-                            docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/auth:${AUTH_IMAGE_VERSION} . 
-                            cd ../../code-dockerfile/UI
-                            docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/ui:${UI_IMAGE_VERSION} . 
-                            cd ../../code-dockerfile/Redis
-                            docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/redis:${REDIS_IMAGE_VERSION} . 
-                            cd ../../code-dockerfile/weather
-                            docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/weather:${WEATHER_IMAGE_VERSION} . 
-                            cd ../../code-dockerfile/DB
-                            docker build -t 801455127377.dkr.ecr.us-east-1.amazonaws.com/db:${DB_IMAGE_VERSION} . 
+                            docker build -t $REGISTRY/auth:${AUTH_IMAGE_VERSION} . 
+                            '''
+                    }
+                }
+        }
+    }
+    stage('build ui image') {
+            when{  
+            expression {
+              params.Registry == 'ecr' }
+              }
+            steps {
+                dir("${WORKSPACE}/app-code/application/${params.APP_NAME}") {
+                    script {
+                         sh '''
+                            cd code-dockerfile/UI
+                            docker build -t $REGISTRY/auth:${UI_IMAGE_VERSION} . 
+                            '''
+                    }
+                }
+        }
+    }   
+    stage('build DB image') {
+            when{  
+            expression {
+              params.Registry == 'ecr' }
+              }
+            steps {
+                dir("${WORKSPACE}/app-code/application/${params.APP_NAME}") {
+                    script {
+                         sh '''
+                            cd code-dockerfile/DB
+                            docker build -t $REGISTRY/auth:${DB_IMAGE_VERSION} . 
+                            '''
+                    }
+                }
+        }
+    }
+     stage('build redis image') {
+            when{  
+            expression {
+              params.Registry == 'ecr' }
+              }
+            steps {
+                dir("${WORKSPACE}/app-code/application/${params.APP_NAME}") {
+                    script {
+                         sh '''
+                            cd code-dockerfile/redis
+                            docker build -t $REGISTRY/auth:${REDIS_IMAGE_VERSION} . 
+                            '''
+                    }
+                }
+        }
+    }
+     stage('build weather image') {
+            when{  
+            expression {
+              params.Registry == 'ecr' }
+              }
+            steps {
+                dir("${WORKSPACE}/app-code/application/${params.APP_NAME}") {
+                    script {
+                         sh '''
+                            cd code-dockerfile/weather
+                            docker build -t $REGISTRY/auth:${WEATHER_IMAGE_VERSION} . 
                             '''
                     }
                 }
