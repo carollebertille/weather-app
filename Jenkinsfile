@@ -72,6 +72,12 @@ pipeline {
                             docker build -t ${ECR_REGISTRY_URI}/${AUTH_ECR_REPOSITORY_NAME}:${params.AUTH_IMAGE_VERSION} .
                             cd ../../code-dockerfile/UI
                             docker build -t ${ECR_REGISTRY_URI}/${UI_ECR_REPOSITORY_NAME}:${params.UI_IMAGE_VERSION} .
+                            cd ../../code-dockerfile/DB
+                            docker build -t ${ECR_REGISTRY_URI}/${DB_ECR_REPOSITORY_NAME}:${params.DB_IMAGE_VERSION} .
+                            cd ../../code-dockerfile/Redis
+                            docker build -t ${ECR_REGISTRY_URI}/${REDIS_ECR_REPOSITORY_NAME}:${params.REDIS_IMAGE_VERSION} .
+                            cd ../../code-dockerfile/weather
+                            docker build -t ${ECR_REGISTRY_URI}/${WEATHER_ECR_REPOSITORY_NAME}:${params.weather_IMAGE_VERSION} .
                             """
                     }
                 }
