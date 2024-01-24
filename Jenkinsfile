@@ -69,7 +69,7 @@ pipeline {
                     script {
                          sh """
                             cd ${WORKSPACE}/app-code/application/${params.APP_NAME}/code-dockerfile/auth
-                            sudo docker build -t ${ECR_REGISTRY_URI}/${AUTH_ECR_REPOSITORY_NAME}:${params.AUTH_IMAGE_VERSION} .
+                            docker build -t ${ECR_REGISTRY_URI}/${AUTH_ECR_REPOSITORY_NAME}:${params.AUTH_IMAGE_VERSION} .
                            
                             """
                     }
@@ -86,7 +86,7 @@ pipeline {
                     script {
                          sh """
                             cd ${WORKSPACE}/app-code/application/${params.APP_NAME}/code-dockerfile/UI
-                            sudo docker build -t ${ECR_REGISTRY_URI}/${UI_ECR_REPOSITORY_NAME}:${params.UI_IMAGE_VERSION} .
+                            docker build -t ${ECR_REGISTRY_URI}/${UI_ECR_REPOSITORY_NAME}:${params.UI_IMAGE_VERSION} .
                             
                             """
                     }
