@@ -16,7 +16,7 @@ pipeline {
         WEATHER_ECR_REPOSITORY_NAME = "weather-weather"
         REDIS_ECR_REPOSITORY_NAME = "weather-redis"
         DB_ECR_REPOSITORY_NAME = "weather-db"
-        dockerimage = '' 
+        dockerImage = '' 
     }
     parameters {
         choice(
