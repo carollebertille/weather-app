@@ -29,6 +29,7 @@ pipeline {
         string(name: 'UI_IMAGE_VERSION', defaultValue: '0.0.0', description: '')
         string(name: 'WEATHER_IMAGE_VERSION', defaultValue: '0.0.0', description: '')
         string(name: 'AUTH_IMAGE_VERSION', defaultValue: '0.0.0', description: '')
+        string(name: 'APP_NAME', defaultValue: 'weather', description: '')
     }
     stages {
         stage ('Checkout') {
