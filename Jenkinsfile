@@ -15,8 +15,7 @@ pipeline {
         AUTH_ECR_REPOSITORY_NAME = "weather-auth"
         WEATHER_ECR_REPOSITORY_NAME = "weather-weather"
         REDIS_ECR_REPOSITORY_NAME = "weather-redis"
-        DB_ECR_REPOSITORY_NAME = "weather-db"
-        dockerImage = '' 
+        DB_ECR_REPOSITORY_NAME = "weather-db" 
     }
     parameters {
         choice(
@@ -72,7 +71,7 @@ pipeline {
                             cd code-dockerfile/auth
                             docker build -t ${ECR_REGISTRY_URI}/${AUTH_ECR_REPOSITORY_NAME}:${params.AUTH_IMAGE_VERSION} .
                             cd ..
-                             cd code-dockerfile/UI
+                            cd code-dockerfile/UI
                             docker build -t ${ECR_REGISTRY_URI}/${UI_ECR_REPOSITORY_NAME}:${params.UI_IMAGE_VERSION} .
                             """
                     }
