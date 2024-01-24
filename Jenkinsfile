@@ -69,7 +69,7 @@ pipeline {
                     script {
                          sh """
                             cd ${WORKSPACE}/app-code/application/${params.APP_NAME}/auth
-                            docker build -t ${ECR_REGISTRY_URI}/${AUTH_ECR_REPOSITORY_NAME}:${params.AUTH_IMAGE_VERSION} .
+                            sudo docker build -t ${ECR_REGISTRY_URI}/${AUTH_ECR_REPOSITORY_NAME}:${params.AUTH_IMAGE_VERSION} .
                            
                             """
                     }
