@@ -77,7 +77,7 @@ pipeline {
                             cd ../../code-dockerfile/Redis
                             docker build -t ${ECR_REGISTRY_URI}/${REDIS_ECR_REPOSITORY_NAME}:${params.REDIS_IMAGE_VERSION} .
                             cd ../../code-dockerfile/weather
-                            docker build -t ${ECR_REGISTRY_URI}/${WEATHER_ECR_REPOSITORY_NAME}:${params.weather_IMAGE_VERSION} .
+                            docker build -t ${ECR_REGISTRY_URI}/${WEATHER_ECR_REPOSITORY_NAME}:${params.WEATHER_IMAGE_VERSION} .
                             """
                     }
                 }
