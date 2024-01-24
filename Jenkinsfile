@@ -70,8 +70,8 @@ pipeline {
                     script {
                          sh '''
                             cd code-dockerfile/auth
-                            dockerImage = docker.build("${ECR_REGISTRY_URI}/${AUTH_ECR_REPOSITORY_NAME}:${params.AUTH_IMAGE_VERSION}")
-                           // docker build -t $REGISTRY/weather-auth:${params.AUTH_IMAGE_VERSION} . 
+                            dockerImage = docker.build ("${ECR_REGISTRY_URI}/${AUTH_ECR_REPOSITORY_NAME}:${params.AUTH_IMAGE_VERSION}")
+                           
                             '''
                     }
                 }
