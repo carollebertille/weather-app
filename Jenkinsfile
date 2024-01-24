@@ -85,11 +85,10 @@ pipeline {
             steps {
                 dir("${WORKSPACE}/app-code/application/${params.APP_NAME}") {
                     script {
-                         sh '''
+                         sh """
                             cd code-dockerfile/UI
-                            dockerImage = docker.build("${ECR_REGISTRY_URI}/${UI_ECR_REPOSITORY_NAME}:${params.UI_IMAGE_VERSION}")
-                          //  docker build -t $REGISTRY/weather-ui:${params.UI_IMAGE_VERSION} . 
-                            '''
+                            docker build -t ${ECR_REGISTRY_URI}/${UI_ECR_REPOSITORY_NAME}:${params.UI_IMAGE_VERSION} .
+                            """
                     }
                 }
         }
@@ -102,11 +101,10 @@ pipeline {
             steps {
                 dir("${WORKSPACE}/app-code/application/${params.APP_NAME}") {
                     script {
-                         sh '''
+                         sh """
                             cd code-dockerfile/DB
-                            dockerImage = docker.build("${ECR_REGISTRY_URI}/${DB_ECR_REPOSITORY_NAME}:${params.DB_IMAGE_VERSION}")
-                          //  docker build -t $REGISTRY/weather-db:${params.DB_IMAGE_VERSION} . 
-                            '''
+                             docker build -t ${ECR_REGISTRY_URI}/${DB_ECR_REPOSITORY_NAME}:${params.DB_IMAGE_VERSION} .
+                            """
                     }
                 }
         }
@@ -119,11 +117,10 @@ pipeline {
             steps {
                 dir("${WORKSPACE}/app-code/application/${params.APP_NAME}") {
                     script {
-                         sh '''
+                         sh """
                             cd code-dockerfile/redis
-                            dockerImage = docker.build("${ECR_REGISTRY_URI}/${REDIS_ECR_REPOSITORY_NAME}:${params.REDIS_IMAGE_VERSION}")
-                          //  docker build -t $REGISTRY/weather-redis:${params.REDIS_IMAGE_VERSION} . 
-                            '''
+                            docker build -t ${ECR_REGISTRY_URI}/${REDIS_ECR_REPOSITORY_NAME}:${params.REDIS_IMAGE_VERSION} .
+                            """
                     }
                 }
         }
@@ -136,11 +133,10 @@ pipeline {
             steps {
                 dir("${WORKSPACE}/app-code/application/${params.APP_NAME}") {
                     script {
-                         sh '''
+                         sh """
                             cd code-dockerfile/weather
-                            dockerImage = docker.build("${ECR_REGISTRY_URI}/${WEATHER_ECR_REPOSITORY_NAME}:${params.WEATHER_IMAGE_VERSION}")
-                          //  docker build -t $REGISTRY/weather-weather:${params.WEATHER_IMAGE_VERSION} . 
-                            '''
+                            docker build -t ${ECR_REGISTRY_URI}/${WEATHER_ECR_REPOSITORY_NAME}:${params.WEATHER_IMAGE_VERSION} .
+                            """
                     }
                 }
         }
