@@ -8,7 +8,7 @@ pipeline {
         timestamps()
     }
     environment {
-        registryCredential = 'jenkins-ecr'
+        registryCredential = 'aws-credentials'
         DOCKERHUB_REGISTRY = "edennolsn2021"
         ECR_REGISTRY_URI = "801455127377.dkr.ecr.us-east-1.amazonaws.com"
         UI_ECR_REPOSITORY_NAME = "weather-ui"
