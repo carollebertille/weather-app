@@ -100,6 +100,10 @@ pipeline {
                             aws s3 ls
                             aws ecr get-login-password --region ${params.AWS_REGION} |  docker login --username AWS --password-stdin ${ECR_REGISTRY_URI}
                             docker push ${ECR_REGISTRY_URI}/${UI_ECR_REPOSITORY_NAME}:${params.UI_IMAGE_TAG}
+                            docker push ${ECR_REGISTRY_URI}/${AUTH_ECR_REPOSITORY_NAME}:${params.AUTH_IMAGE_TAG}
+                            docker push ${ECR_REGISTRY_URI}/${WEATHER_ECR_REPOSITORY_NAME}:${params.WEATHER_IMAGE_TAG}
+                            docker push ${ECR_REGISTRY_URI}/${REDIS_ECR_REPOSITORY_NAME}:${params.DB_IMAGE_TAG}
+                            docker push ${ECR_REGISTRY_URI}/${DB_ECR_REPOSITORY_NAME}:${params.DB_IMAGE_TAG}
                         """
                    } 
                 }
