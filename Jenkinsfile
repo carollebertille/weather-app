@@ -29,6 +29,7 @@ pipeline {
         string(name: 'WEATHER_IMAGE_TAG', defaultValue: '0.0.0', description: '')
         string(name: 'AUTH_IMAGE_TAG', defaultValue: '0.0.0', description: '')
         string(name: 'APP_NAME', defaultValue: 'weather', description: '')
+        string(name: 'AWS_REGION', defaultValue: 'us-east-1', description: '')
     }
     stages {
         stage ('Checkout') {
@@ -83,7 +84,25 @@ pipeline {
                 }
         }
     }
-    
+    stage('Getting AWS Credentials') {
+            steps {
+                script {
+                   def awsCredentialsId = 'aws-cred'
+                   withCredentials([[
+                        $class: 'AmazonWebServicesCredentialsBinding',
+                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                        credentialsId: aws-credentials,
+                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                    ]]) {
+                        aws_credentials()
+
+                        sh """
+                            aws s3 ls
+                        """
+                   } 
+                }
+            }
+        }
      stage('Login ecr') {
             when{  
             expression {
@@ -153,4 +172,23 @@ pipeline {
              "\n Build url : ${env.BUILD_URL}"
          }   
      }*/
-}        
+} 
+def aws_credentials() {
+sh """    
+mkdir -p $HOME/.aws || true
+
+cat <<EOF >  $HOME/.aws/credentials
+[default]
+aws_access_key_id = ${AWS_ACCESS_KEY_ID}
+aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}
+EOF
+
+cat <<EOF >  $HOME/.aws/config
+[default]
+region = ${params.AWS_REGION}
+output = json
+EOF
+
+aws s3 ls
+"""
+}
