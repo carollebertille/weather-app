@@ -111,12 +111,15 @@ pipeline {
             steps {
                     script {
                          sh """
-                            aws ecr get-login-password --region ${params.AWS_REGION} | sudo docker login --username AWS --password-stdin ${ECR_REGISTRY_URI}
-                            docker push ${ECR_REGISTRY_URI}/${UI_ECR_REPOSITORY_NAME}:${params.UI_IMAGE_TAG}
-                            docker push ${ECR_REGISTRY_URI}/${AUTH_ECR_REPOSITORY_NAME}:${params.AUTH_IMAGE_TAG}
-                            docker push ${ECR_REGISTRY_URI}/${WEATHER_ECR_REPOSITORY_NAME}:${params.WEATHER_IMAGE_TAG}
-                            docker push ${ECR_REGISTRY_URI}/${REDIS_ECR_REPOSITORY_NAME}:${params.DB_IMAGE_TAG}
-                            docker push ${ECR_REGISTRY_URI}/${DB_ECR_REPOSITORY_NAME}:${params.DB_IMAGE_TAG}
+
+
+                         docker.withRegistry('https://${ECR_REGISTRY_URI}', 'ecr:us-east-1:${awsCredentialsId') {
+                
+                         docker.image("801455127377.dkr.ecr.us-east-1.amazonaws.com/weather-ui:0.0.0").push()
+                         }
+                          //  aws ecr get-login-password --region ${params.AWS_REGION} | sudo docker login --username AWS --password-stdin ${ECR_REGISTRY_URI}
+                           // docker push ${ECR_REGISTRY_URI}/${UI_ECR_REPOSITORY_NAME}:${params.UI_IMAGE_TAG}
+                            
                             """
                         
                     }
@@ -130,6 +133,10 @@ pipeline {
             steps {
                     script {
                          sh '''
+                         docker push ${ECR_REGISTRY_URI}/${AUTH_ECR_REPOSITORY_NAME}:${params.AUTH_IMAGE_TAG}
+                            docker push ${ECR_REGISTRY_URI}/${WEATHER_ECR_REPOSITORY_NAME}:${params.WEATHER_IMAGE_TAG}
+                            docker push ${ECR_REGISTRY_URI}/${REDIS_ECR_REPOSITORY_NAME}:${params.DB_IMAGE_TAG}
+                            docker push ${ECR_REGISTRY_URI}/${DB_ECR_REPOSITORY_NAME}:${params.DB_IMAGE_TAG}
                             aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $REGISTRY/ui
                             aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $REGISTRY/auth
                             aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $REGISTRY/weather
