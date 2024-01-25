@@ -87,11 +87,11 @@ pipeline {
     stage('Getting AWS Credentials') {
             steps {
                 script {
-                   def awsCredentialsId = 'aws-cred'
+                   def awsCredentialsId = 'aws-credentials'
                    withCredentials([[
                         $class: 'AmazonWebServicesCredentialsBinding',
                         accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                        credentialsId: aws-credentials,
+                        credentialsId: awsCredentialsId,
                         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                     ]]) {
                         aws_credentials()
