@@ -23,11 +23,11 @@ pipeline {
             name: 'Registry'
           )
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: '')
-        string(name: 'DB_IMAGE_VERSION', defaultValue: '0.0.0', description: '')
-        string(name: 'REDIS_IMAGE_VERSION', defaultValue: '0.0.0', description: '')
-        string(name: 'UI_IMAGE_VERSION', defaultValue: '0.0.0', description: '')
-        string(name: 'WEATHER_IMAGE_VERSION', defaultValue: '0.0.0', description: '')
-        string(name: 'AUTH_IMAGE_VERSION', defaultValue: '0.0.0', description: '')
+        string(name: 'DB_IMAGE_TAG', defaultValue: '0.0.0', description: '')
+        string(name: 'REDIS_IMAGE_TAG', defaultValue: '0.0.0', description: '')
+        string(name: 'UI_IMAGE_TAG', defaultValue: '0.0.0', description: '')
+        string(name: 'WEATHER_IMAGE_TAG', defaultValue: '0.0.0', description: '')
+        string(name: 'AUTH_IMAGE_TAG', defaultValue: '0.0.0', description: '')
         string(name: 'APP_NAME', defaultValue: 'weather', description: '')
     }
     stages {
@@ -69,22 +69,22 @@ pipeline {
                     script {
                          sh """
                             cd code-dockerfile/auth
-                            docker build -t ${ECR_REGISTRY_URI}/${AUTH_ECR_REPOSITORY_NAME}:${params.AUTH_IMAGE_VERSION} .
+                            docker build -t ${ECR_REGISTRY_URI}/${AUTH_ECR_REPOSITORY_NAME}:${params.AUTH_IMAGE_TAG} .
                             cd ../../code-dockerfile/UI
-                            docker build -t ${ECR_REGISTRY_URI}/${UI_ECR_REPOSITORY_NAME}:${params.UI_IMAGE_VERSION} .
+                            docker build -t ${ECR_REGISTRY_URI}/${UI_ECR_REPOSITORY_NAME}:${params.UI_IMAGE_TAG} .
                             cd ../../code-dockerfile/DB
-                            docker build -t ${ECR_REGISTRY_URI}/${DB_ECR_REPOSITORY_NAME}:${params.DB_IMAGE_VERSION} .
+                            docker build -t ${ECR_REGISTRY_URI}/${DB_ECR_REPOSITORY_NAME}:${params.DB_IMAGE_TAG} .
                             cd ../../code-dockerfile/Redis
-                            docker build -t ${ECR_REGISTRY_URI}/${REDIS_ECR_REPOSITORY_NAME}:${params.REDIS_IMAGE_VERSION} .
+                            docker build -t ${ECR_REGISTRY_URI}/${REDIS_ECR_REPOSITORY_NAME}:${params.REDIS_IMAGE_TAG} .
                             cd ../../code-dockerfile/weather
-                            docker build -t ${ECR_REGISTRY_URI}/${WEATHER_ECR_REPOSITORY_NAME}:${params.WEATHER_IMAGE_VERSION} .
+                            docker build -t ${ECR_REGISTRY_URI}/${WEATHER_ECR_REPOSITORY_NAME}:${params.WEATHER_IMAGE_TAG} .
                             """
                     }
                 }
         }
     }
     
-   /* stage('Login ecr') {
+     stage('Login ecr') {
             when{  
             expression {
               params.Registry == 'ecr' }
@@ -92,13 +92,16 @@ pipeline {
             steps {
                     script {
                          sh '''
-                            aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $REGISTRY
+                            docker.withRegistry("https://${ECR_REGISTRY_URI}", "ecr:us-east-1:${registryCredential}") {
+                            docker push ${ECR_REGISTRY_URI}/${AUTH_ECR_REPOSITORY_NAME}:${params.AUTH_IMAGE_TAG}
+                            }
+
                             
                             '''
                     }
           }
       } 
-      stage('Push all images  to ecr') {
+      /*stage('Push all images  to ecr') {
             when{  
             expression {
               params.Registry == 'ecr' }
