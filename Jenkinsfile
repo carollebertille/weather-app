@@ -113,7 +113,7 @@ pipeline {
                          // sh """
 
 
-                         docker.withRegistry('https://${ECR_REGISTRY_URI}', 'ecr:us-east-1:${awsCredentialsId}') {
+                         docker.withRegistry('https://${ECR_REGISTRY_URI}', 'ecr:us-east-1:credentialsId') {
                 
                          docker.image("801455127377.dkr.ecr.us-east-1.amazonaws.com/weather-ui:0.0.0").push()
                          }
