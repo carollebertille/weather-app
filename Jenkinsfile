@@ -110,7 +110,7 @@ pipeline {
               }
             steps {
                     script {
-                         sh """
+                         // sh """
 
 
                          docker.withRegistry('https://${ECR_REGISTRY_URI}', 'ecr:us-east-1:${awsCredentialsId') {
@@ -120,7 +120,7 @@ pipeline {
                           //  aws ecr get-login-password --region ${params.AWS_REGION} | sudo docker login --username AWS --password-stdin ${ECR_REGISTRY_URI}
                            // docker push ${ECR_REGISTRY_URI}/${UI_ECR_REPOSITORY_NAME}:${params.UI_IMAGE_TAG}
                             
-                            """
+                          //  """
                         
                     }
           }
