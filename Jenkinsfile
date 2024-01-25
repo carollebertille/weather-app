@@ -8,7 +8,7 @@ pipeline {
         timestamps()
     }
     environment {
-        registryCredential = "aws-credentials"
+        CREDENTIALSAWS = credentials('aws-credentials')
         DOCKERHUB_REGISTRY = "edennolsn2021"
         ECR_REGISTRY_URI = "801455127377.dkr.ecr.us-east-1.amazonaws.com"
         UI_ECR_REPOSITORY_NAME = "weather-ui"
@@ -91,7 +91,7 @@ pipeline {
               }
             steps {
                     script {
-                        docker.withRegistry("https://${ECR_REGISTRY_URI}", "ecr:us-east-1:${registryCredential}") {
+                        docker.withRegistry("https://${ECR_REGISTRY_URI}", "ecr:us-east-1:${CREDENTIALSAWS}") {
                          sh """
                             docker push ${ECR_REGISTRY_URI}/${AUTH_ECR_REPOSITORY_NAME}:${params.AUTH_IMAGE_TAG}
                             """
