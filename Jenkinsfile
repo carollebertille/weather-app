@@ -91,13 +91,11 @@ pipeline {
               }
             steps {
                     script {
-                         sh '''
-                            docker.withRegistry("https://${ECR_REGISTRY_URI}", "ecr:us-east-1:${registryCredential}") {
+                        docker.withRegistry("https://${ECR_REGISTRY_URI}", "ecr:us-east-1:${registryCredential}") {
+                         sh """
                             docker push ${ECR_REGISTRY_URI}/${AUTH_ECR_REPOSITORY_NAME}:${params.AUTH_IMAGE_TAG}
-                            }
-
-                            
-                            '''
+                            """
+                        }
                     }
           }
       } 
