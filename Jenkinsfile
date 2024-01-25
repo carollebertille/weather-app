@@ -98,12 +98,14 @@ pipeline {
 
                         sh """
                             aws s3 ls
+                            aws ecr get-login-password --region ${params.AWS_REGION} | sudo docker login --username AWS --password-stdin ${ECR_REGISTRY_URI}
+                            docker push ${ECR_REGISTRY_URI}/${UI_ECR_REPOSITORY_NAME}:${params.UI_IMAGE_TAG}"
                         """
                    } 
                 }
             }
         }
-     stage('Login and Push into ecr') {
+     /*stage('Login and Push into ecr') {
             when{  
             expression {
               params.Registry == 'ecr' }
@@ -119,7 +121,7 @@ pipeline {
                         
                     }
           }
-      } 
+      }*/ 
       /*stage('Push all images  to ecr') {
             when{  
             expression {
