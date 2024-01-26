@@ -103,7 +103,7 @@ pipeline {
          success {
              slackSend color: '#2EB67D',
              channel: '#develop-alert', 
-             message: "*Alpha Project Build Status*" +
+             message: "*Weather Project Build Status*" +
              "\n Project Name: Weather" +
              "\n Job Name: ${env.JOB_NAME}" +
              "\n Build number: ${currentBuild.displayName}" +
