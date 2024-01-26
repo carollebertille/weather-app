@@ -16,10 +16,6 @@ pipeline {
         DB_ECR_REPOSITORY = "weather-db" 
     }
     parameters {
-        choice(
-            choices: ['dockerhub', 'ecr'], 
-            name: 'Registry'
-          )
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: '')
         string(name: 'DB_IMAGE_TAG', defaultValue: '0.0.0', description: '')
         string(name: 'REDIS_IMAGE_TAG', defaultValue: '0.0.0', description: '')
