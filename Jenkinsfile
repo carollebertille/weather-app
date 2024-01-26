@@ -148,11 +148,16 @@ pipeline {
                 passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
                   sh """
                     sudo docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD}
+                    docker push ${DOCKER_HUB_USERNAME}/${UI_REPOSITORY_NAME}:${params.UI_IMAGE_TAG}
+                    docker push ${DOCKER_HUB_USERNAME}/${AUTH_REPOSITORY_NAME}:${params.AUTH_IMAGE_TAG}
+                    docker push ${DOCKER_HUB_USERNAME}/${WEATHER_REPOSITORY_NAME}:${params.WEATHER_IMAGE_TAG}
+                    docker push ${DOCKER_HUB_USERNAME}/${REDIS_REPOSITORY_NAME}:${params.DB_IMAGE_TAG}
+                    docker push ${DOCKER_HUB_USERNAME}/${DB_REPOSITORY_NAME}:${params.DB_IMAGE_TAG}
                   """
                 }
             }
       }
-       stage('Push all images') {
+       /*stage('Push all images') {
             when{  
             expression {
               params.Registry == 'dockerhub' }
@@ -170,7 +175,7 @@ pipeline {
                     }
                 }
         }
-    }
+    }*/
    
             
  }
