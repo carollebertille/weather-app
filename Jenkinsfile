@@ -136,7 +136,7 @@ pipeline {
                 }
         }
     }
-      stage('Login and push all images into dockerhub') {
+     /* stage('Login and push all images into dockerhub') {
           when{  
             expression {
               params.Registry == 'dockerhub' }
@@ -156,8 +156,8 @@ pipeline {
                   """
                 }
             }
-      }
-       /*stage('Push all images') {
+      }*/
+       stage('Push all images') {
             when{  
             expression {
               params.Registry == 'dockerhub' }
@@ -175,7 +175,7 @@ pipeline {
                     }
                 }
         }
-    }*/
+    }
    
             
  }
