@@ -8,13 +8,12 @@ pipeline {
         timestamps()
     }
     environment {
-        DOCKERHUB_REGISTRY = "edennolsn2021"
         ECR_REGISTRY_URI = "801455127377.dkr.ecr.us-east-1.amazonaws.com"
-        UI_REPOSITORY_NAME = "weather-ui"
-        AUTH_REPOSITORY_NAME = "weather-auth"
-        WEATHER_REPOSITORY_NAME = "weather-weather"
-        REDIS_REPOSITORY_NAME = "weather-redis"
-        DB_REPOSITORY_NAME = "weather-db" 
+        UI_ECR_REPOSITORY = "weather-ui"
+        AUTH_ECR_REPOSITORY = "weather-auth"
+        WEATHER_ECR_REPOSITORY = "weather-weather"
+        REDIS_ECR_REPOSITORY = "weather-redis"
+        DB_ECR_REPOSITORY = "weather-db" 
     }
     parameters {
         choice(
@@ -27,13 +26,12 @@ pipeline {
         string(name: 'UI_IMAGE_TAG', defaultValue: '0.0.0', description: '')
         string(name: 'WEATHER_IMAGE_TAG', defaultValue: '0.0.0', description: '')
         string(name: 'AUTH_IMAGE_TAG', defaultValue: '0.0.0', description: '')
-        string(name: 'APP_NAME', defaultValue: 'weather', description: '')
         string(name: 'AWS_REGION', defaultValue: 'us-east-1', description: '')
     }
     stages {
         stage ('Checkout') {
             steps {
-                dir("${WORKSPACE}/app-code/application/${params.APP_NAME}") {
+                dir("${WORKSPACE}/application") {
                     checkout([
                         $class: 'GitSCM',
                         branches: [[name: "*/${env.BRANCH_NAME}"]],
@@ -50,7 +48,7 @@ pipeline {
         }
         /*stage('SonarQube Analysis') {
             steps {
-                dir("${WORKSPACE}/app-code/application/${params.APP_NAME}") {
+                dir("${WORKSPACE}/application") {
                     script {
                         withSonarQubeEnv('sonar-scanner') {
                             sh "/var/opt/sonar-scanner/bin/sonar-scanner"
@@ -65,19 +63,19 @@ pipeline {
               params.Registry == 'ecr' }
               }
             steps {
-                dir("${WORKSPACE}/app-code/application/${params.APP_NAME}") {
+                dir("${WORKSPACE}/application/code-dockerfile") {
                     script {
                          sh """
-                            cd code-dockerfile/auth
-                            docker build -t ${ECR_REGISTRY_URI}/${AUTH_ECR_REPOSITORY_NAME}:${params.AUTH_IMAGE_TAG} .
-                            cd ../../code-dockerfile/UI
-                            docker build -t ${ECR_REGISTRY_URI}/${UI_ECR_REPOSITORY_NAME}:${params.UI_IMAGE_TAG} .
-                            cd ../../code-dockerfile/DB
-                            docker build -t ${ECR_REGISTRY_URI}/${DB_ECR_REPOSITORY_NAME}:${params.DB_IMAGE_TAG} .
-                            cd ../../code-dockerfile/Redis
-                            docker build -t ${ECR_REGISTRY_URI}/${REDIS_ECR_REPOSITORY_NAME}:${params.REDIS_IMAGE_TAG} .
-                            cd ../../code-dockerfile/weather
-                            docker build -t ${ECR_REGISTRY_URI}/${WEATHER_ECR_REPOSITORY_NAME}:${params.WEATHER_IMAGE_TAG} .
+                            cd /auth
+                            docker build -t ${ECR_REGISTRY_URI}/${AUTH_ECR_REPOSITORY}:${params.AUTH_IMAGE_TAG} .
+                            cd ../UI
+                            docker build -t ${ECR_REGISTRY_URI}/${UI_ECR_REPOSITORY}:${params.UI_IMAGE_TAG} .
+                            cd ../DB
+                            docker build -t ${ECR_REGISTRY_URI}/${DB_ECR_REPOSITORY}:${params.DB_IMAGE_TAG} .
+                            cd ../Redis
+                            docker build -t ${ECR_REGISTRY_URI}/${REDIS_ECR_REPOSITORY}:${params.REDIS_IMAGE_TAG} .
+                            cd ../weather
+                            docker build -t ${ECR_REGISTRY_URI}/${WEATHER_ECR_REPOSITORY}:${params.WEATHER_IMAGE_TAG} .
                             """
                     }
                 }
@@ -102,82 +100,16 @@ pipeline {
                         sh """
                             aws s3 ls
                             aws ecr get-login-password --region ${params.AWS_REGION} |  docker login --username AWS --password-stdin ${ECR_REGISTRY_URI}
-                            docker push ${ECR_REGISTRY_URI}/${UI_REPOSITORY_NAME}:${params.UI_IMAGE_TAG}
-                            docker push ${ECR_REGISTRY_URI}/${AUTH_REPOSITORY_NAME}:${params.AUTH_IMAGE_TAG}
-                            docker push ${ECR_REGISTRY_URI}/${WEATHER_REPOSITORY_NAME}:${params.WEATHER_IMAGE_TAG}
-                            docker push ${ECR_REGISTRY_URI}/${REDIS_REPOSITORY_NAME}:${params.DB_IMAGE_TAG}
-                            docker push ${ECR_REGISTRY_URI}/${DB_REPOSITORY_NAME}:${params.DB_IMAGE_TAG}
+                            docker push ${ECR_REGISTRY_URI}/${UI_ECR_REPOSITORYE}:${params.UI_IMAGE_TAG}
+                            docker push ${ECR_REGISTRY_URI}/${AUTH_ECR_REPOSITORY}:${params.AUTH_IMAGE_TAG}
+                            docker push ${ECR_REGISTRY_URI}/${WEATHER_ECR_REPOSITORY}:${params.WEATHER_IMAGE_TAG}
+                            docker push ${ECR_REGISTRY_URI}/${REDIS_ECR_REPOSITORY}:${params.DB_IMAGE_TAG}
+                            docker push ${ECR_REGISTRY_URI}/${DB_ECR_REPOSITORY}:${params.DB_IMAGE_TAG}
                         """
                    } 
                 }
             }
-        }
-     stage('build all images') {
-            when{  
-            expression {
-              params.Registry == 'dockerhub' }
-              }
-            steps {
-                dir("${WORKSPACE}/app-code/application/${params.APP_NAME}") {
-                    script {
-                         sh """
-                            cd code-dockerfile/auth
-                            docker build -t ${DOCKERHUB_REGISTRY}/${AUTH_REPOSITORY_NAME}:${params.AUTH_IMAGE_TAG} .
-                            cd ../../code-dockerfile/UI
-                            docker build -t ${DOCKERHUB_REGISTRY}/${UI_REPOSITORY_NAME}:${params.UI_IMAGE_TAG} .
-                            cd ../../code-dockerfile/DB
-                            docker build -t ${DOCKERHUB_REGISTRY}/${DB_REPOSITORY_NAME}:${params.DB_IMAGE_TAG} .
-                            cd ../../code-dockerfile/Redis
-                            docker build -t ${DOCKERHUB_REGISTRY}/${REDIS_REPOSITORY_NAME}:${params.REDIS_IMAGE_TAG} .
-                            cd ../../code-dockerfile/weather
-                            docker build -t ${DOCKERHUB_REGISTRY}/${WEATHER_REPOSITORY_NAME}:${params.WEATHER_IMAGE_TAG} .
-                            """
-                    }
-                }
-        }
-    }
-     /* stage('Login and push all images into dockerhub') {
-          when{  
-            expression {
-              params.Registry == 'dockerhub' }
-              }
-             steps {
-              withCredentials([
-                usernamePassword(credentialsId: 'dockerhub_access', 
-                usernameVariable: 'DOCKER_HUB_USERNAME', 
-                passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
-                  sh """
-                    sudo docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD}
-                    docker push ${DOCKER_HUB_USERNAME}/${UI_REPOSITORY_NAME}:${params.UI_IMAGE_TAG}
-                    docker push ${DOCKER_HUB_USERNAME}/${AUTH_REPOSITORY_NAME}:${params.AUTH_IMAGE_TAG}
-                    docker push ${DOCKER_HUB_USERNAME}/${WEATHER_REPOSITORY_NAME}:${params.WEATHER_IMAGE_TAG}
-                    docker push ${DOCKER_HUB_USERNAME}/${REDIS_REPOSITORY_NAME}:${params.DB_IMAGE_TAG}
-                    docker push ${DOCKER_HUB_USERNAME}/${DB_REPOSITORY_NAME}:${params.DB_IMAGE_TAG}
-                  """
-                }
-            }
-      }*/
-       stage('Push all images') {
-            when{  
-            expression {
-              params.Registry == 'dockerhub' }
-              }
-            steps {
-                dir("${WORKSPACE}/app-code/application/${params.APP_NAME}") {
-                    script {
-                         sh """
-                            docker push ${DOCKER_HUB_USERNAME}/${UI_REPOSITORY_NAME}:${params.UI_IMAGE_TAG}
-                            docker push ${DOCKER_HUB_USERNAME}/${AUTH_REPOSITORY_NAME}:${params.AUTH_IMAGE_TAG}
-                            docker push ${DOCKER_HUB_USERNAME}/${WEATHER_REPOSITORY_NAME}:${params.WEATHER_IMAGE_TAG}
-                            docker push ${DOCKER_HUB_USERNAME}/${REDIS_REPOSITORY_NAME}:${params.DB_IMAGE_TAG}
-                            docker push ${DOCKER_HUB_USERNAME}/${DB_REPOSITORY_NAME}:${params.DB_IMAGE_TAG}
-                            """
-                    }
-                }
-        }
-    }
-   
-            
+        }         
  }
 /* post {
          success {
