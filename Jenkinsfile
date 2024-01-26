@@ -152,7 +152,7 @@ pipeline {
                 }
             }
       }
-       stage('Push all images (auth, ui, redis, weather, db)') {
+       stage('Push all images') {
             when{  
             expression {
               params.Registry == 'dockerhub' }
