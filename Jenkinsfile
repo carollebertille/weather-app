@@ -23,7 +23,6 @@ pipeline {
         string(name: 'WEATHER_IMAGE_TAG', defaultValue: '0.0.0', description: '')
         string(name: 'AUTH_IMAGE_TAG', defaultValue: '0.0.0', description: '')
         string(name: 'AWS_REGION', defaultValue: 'us-east-1', description: '')
-        string(name: 'APP_NAME', defaultValue: 'weather', description: '')
     }
     stages {
         stage ('Checkout') {
@@ -45,7 +44,7 @@ pipeline {
         }
         /*stage('SonarQube Analysis') {
             steps {
-                dir("${WORKSPACE}/application${params.APP_NAME}") {
+                dir("${WORKSPACE}/application") {
                     script {
                         withSonarQubeEnv('sonar-scanner') {
                             sh "/var/opt/sonar-scanner/bin/sonar-scanner"
@@ -63,11 +62,11 @@ pipeline {
                             docker build -t ${ECR_REGISTRY_URI}/${AUTH_ECR_REPOSITORY}:${params.AUTH_IMAGE_TAG} .
                             cd ../../code-dockerfile/UI
                             docker build -t ${ECR_REGISTRY_URI}/${UI_ECR_REPOSITORY}:${params.UI_IMAGE_TAG} .
-                            cd ../DB
+                            cd ../../code-dockerfile/DB
                             docker build -t ${ECR_REGISTRY_URI}/${DB_ECR_REPOSITORY}:${params.DB_IMAGE_TAG} .
-                            cd ../Redis
+                            cd ../../code-dockerfile/Redis
                             docker build -t ${ECR_REGISTRY_URI}/${REDIS_ECR_REPOSITORY}:${params.REDIS_IMAGE_TAG} .
-                            cd ../weather
+                            cd ../../code-dockerfile/weather
                             docker build -t ${ECR_REGISTRY_URI}/${WEATHER_ECR_REPOSITORY}:${params.WEATHER_IMAGE_TAG} .
                             """
                     }
