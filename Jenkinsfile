@@ -99,7 +99,7 @@ pipeline {
             }
         }         
  }
-/* post {
+   post {
          success {
              slackSend color: '#2EB67D',
              channel: '#develop', 
@@ -132,7 +132,7 @@ pipeline {
              "\n Action : Please check the console output to fix this job IMMEDIATELY" +
              "\n Build url : ${env.BUILD_URL}"
          }   
-     }*/
+     }
 } 
 def aws_credentials() {
 sh """    
