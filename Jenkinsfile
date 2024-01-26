@@ -102,7 +102,7 @@ pipeline {
    post {
          success {
              slackSend color: '#2EB67D',
-             channel: '#develop', 
+             channel: '#develop-alert', 
              message: "*Alpha Project Build Status*" +
              "\n Project Name: Weather" +
              "\n Job Name: ${env.JOB_NAME}" +
@@ -112,7 +112,7 @@ pipeline {
          }
          failure {
              slackSend color: '#E01E5A',
-             channel: '#develop',  
+             channel: '#develop-alert',  
              message: "*Weather Project Build Status*" +
              "\n Project Name: Weather" +
              "\n Job Name: ${env.JOB_NAME}" +
@@ -123,7 +123,7 @@ pipeline {
          }
          unstable {
              slackSend color: '#ECB22E',
-             channel: '#develop', 
+             channel: '#develop-alert', 
              message: "*Weather Project Build Status*" +
              "\n Project Name: Weather" +
              "\n Job Name: ${env.JOB_NAME}" +
