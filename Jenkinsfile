@@ -54,10 +54,6 @@ pipeline {
             }
         }*/
         stage('build all images (auth, ui, redis, weather, db)') {
-            when{  
-            expression {
-              params.Registry == 'ecr' }
-              }
             steps {
                 dir("${WORKSPACE}/application/code-dockerfile") {
                     script {
@@ -78,10 +74,6 @@ pipeline {
         }
     }
     stage('Login and push all images into ECR') {
-        when{  
-            expression {
-              params.Registry == 'ecr' }
-              }
             steps {
                 script {
                    def awsCredentialsId = 'aws-credentials'
