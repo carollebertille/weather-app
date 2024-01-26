@@ -55,10 +55,10 @@ pipeline {
         }*/
         stage('build all images (auth, ui, redis, weather, db)') {
             steps {
-                dir("${WORKSPACE}/application/code-dockerfile") {
+                dir("${WORKSPACE}/application") {
                     script {
                          sh """
-                            cd /auth
+                            cd /code-dockerfile/auth
                             docker build -t ${ECR_REGISTRY_URI}/${AUTH_ECR_REPOSITORY}:${params.AUTH_IMAGE_TAG} .
                             cd ../UI
                             docker build -t ${ECR_REGISTRY_URI}/${UI_ECR_REPOSITORY}:${params.UI_IMAGE_TAG} .
